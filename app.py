@@ -247,19 +247,18 @@ def run_screening(satellites, hours, threshold_km):
         .reset_index(drop=True)
     )
 
-    # Assign risk score and risk level
-closest["Risk score"] = (
-    closest["Distance (km)"].apply(calculate_risk_score)
-)
+     # Assign risk score and risk level
+    closest["Risk score"] = (
+        closest["Distance (km)"].apply(calculate_risk_score)
+    )
 
-closest["Risk level"] = (
-    closest["Risk score"].apply(get_risk_level)
-)
+    closest["Risk level"] = (
+        closest["Risk score"].apply(get_risk_level)
+    )
 
 # Identify candidate close approaches
-closest["Candidate"] = (
-    closest["Distance (km)"] <= threshold_km
-)
+    closest["Candidate"] = (
+        closest["Distance (km)"] <= threshold_km
     )
 
     return positions, closest, errors
