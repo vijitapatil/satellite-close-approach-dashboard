@@ -97,6 +97,57 @@ def fetch_tle_data():
 
     return satellites
 
+# --------------------------------------------------
+# RISK SCORE CALCULATION
+# --------------------------------------------------
+
+def calculate_risk_score(distance):
+    if distance < 200:
+        score = 10 - (distance / 200)
+
+    elif distance < 300:
+        score = 9 - ((distance - 200) / 100)
+
+    elif distance < 400:
+        score = 8 - ((distance - 300) / 100)
+
+    elif distance < 500:
+        score = 7 - ((distance - 400) / 100)
+
+    elif distance < 600:
+        score = 6 - ((distance - 500) / 100)
+
+    elif distance < 700:
+        score = 5 - ((distance - 600) / 100)
+
+    elif distance < 800:
+        score = 4 - ((distance - 700) / 100)
+
+    elif distance < 900:
+        score = 3 - ((distance - 800) / 100)
+
+    elif distance <= 1000:
+        score = 2 - ((distance - 900) / 100)
+
+    else:
+        score = 1
+
+    return round(max(1, min(10, score)), 2)
+
+
+def get_risk_level(score):
+    if score >= 9:
+        return "Very High"
+    elif score >= 8:
+        return "High"
+    elif score >= 6:
+        return "Moderate-High"
+    elif score >= 4:
+        return "Moderate"
+    elif score >= 2:
+        return "Low"
+    else:
+        return "Very Low"
 
 # --------------------------------------------------
 # CALCULATE POSITIONS AND SCREEN CLOSE APPROACHES
@@ -196,8 +247,19 @@ def run_screening(satellites, hours, threshold_km):
         .reset_index(drop=True)
     )
 
-    closest["Candidate"] = (
-        closest["Distance (km)"] <= threshold_km
+    # Assign risk score and risk level
+closest["Risk score"] = (
+    closest["Distance (km)"].apply(calculate_risk_score)
+)
+
+closest["Risk level"] = (
+    closest["Risk score"].apply(get_risk_level)
+)
+
+# Identify candidate close approaches
+closest["Candidate"] = (
+    closest["Distance (km)"] <= threshold_km
+)
     )
 
     return positions, closest, errors
@@ -393,5 +455,5 @@ if st.button("🚀 Run Screening", type="primary"):
 st.divider()
 
 st.caption(
-    "Orbit Watch | Educational prototype | SGP4 orbital propagation"
+    "Orbit Guard | Educational prototype | SGP4 orbital propagation"
 )
