@@ -12,12 +12,12 @@ from sgp4.api import Satrec, jday
 # --------------------------------------------------
 
 st.set_page_config(
-    page_title="Orbit Watch",
+    page_title="Orbit Guard",
     page_icon="🛰️",
     layout="wide"
 )
 
-st.title("🛰️ Orbit Watch")
+st.title("🛰️ Orbit Guard")
 st.subheader("Satellite Close-Approach Monitoring System")
 
 st.write(
