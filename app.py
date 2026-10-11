@@ -45,8 +45,9 @@ num_satellites = st.sidebar.selectbox(
 threshold = st.sidebar.slider(
     "Screening threshold (km)",
     min_value=1,
-    max_value=100,
-    value=50
+    max_value=1000,
+    value=1000,
+    step=10
 )
 
 duration_hours = st.sidebar.selectbox(
